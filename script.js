@@ -1,11 +1,8 @@
 initView = function() {
-	
-	let result = chrome.tabs.query({}, function(result) {
-		let numberTabs = result.length;
-		document.getElementById('myThing').innerHTML = JSON.stringify(numberTabs);
+	chrome.storage.local.get(['NumberTabs', 'counter'], function(data) {
+		document.getElementById('openTabs').innerHTML = JSON.stringify(data.NumberTabs);
+		document.getElementById('counter').innerHTML = JSON.stringify(data.counter);
 	});
-}
-
-
+};
 
 document.addEventListener('DOMContentLoaded', initView);

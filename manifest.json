@@ -5,11 +5,12 @@
    "description": "Statistics on history of open tabs.",
    
    "background": {
-       "scripts" : ["background.js"]
+       "scripts" : [ "background.js" ]
    },
    
    "browser_action": {
       "default_title": "Hello everybody!",
       "default_popup": "main.html"
-   }  
+   },
+   "permissions": [ "storage" ]
 }
