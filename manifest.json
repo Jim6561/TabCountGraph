@@ -9,6 +9,7 @@
    },
    
    "browser_action": {
+      "default_icon": "triangle.png",
       "default_title": "Hello everybody!",
       "default_popup": "main.html"
    }  
