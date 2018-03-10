@@ -3,15 +3,21 @@ onTabsChange = function(tab) {
 		let numberTabs = result.length;
 		chrome.storage.local.set({'NumberTabs': numberTabs});
 		
+		
+		chrome.storage.local.get('history', function(data) {
+			if (!data.history) {
+				data.history = [];
+				data.recordsBegan = Date.now();
+			}
+			
+			data.history.push({
+				timestamp: Date.now(),
+				count: numberTabs});
+			
+			chrome.storage.local.set(data);
+		});
+		
 		updateBadge(numberTabs);
-	});
-	
-	chrome.storage.local.get('counter', function(data) {
-		if (!data.counter) {
-			data.counter = 4;
-		}
-		data.counter++;
-		chrome.storage.local.set(data);
 	});
 };
 

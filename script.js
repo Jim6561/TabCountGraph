@@ -1,8 +1,16 @@
 initView = function() {
-	chrome.storage.local.get(['NumberTabs', 'counter'], function(data) {
+	document.getElementById('resetButton').addEventListener('click', resetPressed);
+
+	chrome.storage.local.get(['NumberTabs', 'history', 'recordsBegan'], function(data) {
 		document.getElementById('openTabs').innerHTML = JSON.stringify(data.NumberTabs);
-		document.getElementById('counter').innerHTML = JSON.stringify(data.counter);
+		document.getElementById('history').innerHTML = JSON.stringify(data.history);
+		document.getElementById('recordsBegan').innerHTML = new Date(data.recordsBegan).toDateString();
 	});
 };
+
+resetPressed = function() {
+	chrome.storage.local.remove('history');
+	initView();
+}
 
 document.addEventListener('DOMContentLoaded', initView);
