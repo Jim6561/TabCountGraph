@@ -16,7 +16,7 @@ onTabsChange = function(tab) {
 			}
 		}
 		
-		chrome.storage.local.set({'current': currentState});
+		chrome.storage.local.set({'currentState': currentState});
 		
 		chrome.storage.local.get('history', function(data) {
 			if (!data.history) {
