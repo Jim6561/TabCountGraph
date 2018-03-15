@@ -1,9 +1,13 @@
 initView = function() {
 	document.getElementById('resetButton').addEventListener('click', resetPressed);
 
-	chrome.storage.local.get(['NumberTabs', 'history', 'recordsBegan'], function(data) {
-		document.getElementById('openTabs').innerHTML = JSON.stringify(data.NumberTabs);
-		document.getElementById('history').innerHTML = JSON.stringify(data.history);
+	chrome.storage.local.get(['history', 'recordsBegan', 'currentState'], function(data) {
+	
+	console.log(data);
+	
+		document.getElementById('openTabs').innerHTML = JSON.stringify(data.currentState.numTabs);
+		document.getElementById('openWindows').innerHTML = JSON.stringify(data.currentState.numWindows);
+		document.getElementById('maxTabs').innerHTML = JSON.stringify(data.currentState.maxTabs);
 		document.getElementById('recordsBegan').innerHTML = new Date(data.recordsBegan).toDateString();
 	});
 };

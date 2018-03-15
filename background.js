@@ -1,23 +1,35 @@
 onTabsChange = function(tab) {
-	let result = chrome.tabs.query({}, function(result) {
-		let numberTabs = result.length;
-		chrome.storage.local.set({'NumberTabs': numberTabs});
+	chrome.windows.getAll({populate: true}, function(windows) {
+		let currentState = {
+			numTabs: 0,
+			numWindows: 0,
+			maxTabs: 0	
+		};
 		
+		for (var i = 0; i<windows.length; i++) {
+			currentState.numWindows++;	
+			let thisTabs = windows[i].tabs.length;
+
+			currentState.numTabs += thisTabs;
+			if (thisTabs > currentState.maxTabs) {
+				currentState.maxTabs = thisTabs;
+			}
+		}
+		
+		chrome.storage.local.set({'currentState': currentState});
 		
 		chrome.storage.local.get('history', function(data) {
 			if (!data.history) {
 				data.history = [];
 				data.recordsBegan = Date.now();
 			}
-			
-			data.history.push({
-				timestamp: Date.now(),
-				count: numberTabs});
-			
+		
+			currentState.timestamp = Date.now();
+			data.history.push({currentState});
 			chrome.storage.local.set(data);
 		});
-		
-		updateBadge(numberTabs);
+
+		updateBadge(currentState.numTabs);
 	});
 };
 
