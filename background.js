@@ -50,7 +50,7 @@ updateTotals = function(data, input, currentState) {
 	console.log(input);
 	
 	if (data.totals) {
-		totalsObj.populate(data.totals);
+		totalsObj.data = data.totals;
 	} else {
 		totalsObj.reset();
 	}
@@ -67,7 +67,7 @@ updateTotals = function(data, input, currentState) {
 		}
 	}
 
-	chrome.storage.local.set({'totals': totalsObj.writeForStorage()});
+	chrome.storage.local.set({'totals': totalsObj.data});
 }
 
 updateBadge = function(numberTabs) {
@@ -97,46 +97,16 @@ updateBadge = function(numberTabs) {
 
 totalsObj = {
 
-	totalCreated: 0,
-	totalRemoved: 0,
-	maxTabsEver: 0,
-	today: null,
-	//createdThisYear: null,
-
-	populate: function(dataFromStorage) {
-console.log('populate: ' + JSON.stringify(dataFromStorage));
-		this.totalCreated = dataFromStorage.totalCreated,
-		this.totalRemoved = dataFromStorage.totalRemoved,
-		this.maxTabsEver = dataFromStorage.maxTabsEver,
-		this.today = {
-			token: dataFromStorage.todayToken,
-			count: dataFromStorage.todayCount,
-			max: dataFromStorage.todayMax
-		};
-	},
-
-	writeForStorage: function() {
-		console.log('writing');
-		return {
-			totalCreated: this.totalCreated,
-			totalRemoved: this.totalRemoved,
-			maxTabsEver: this.maxTabsEver,
-			todayToken: this.today.token,
-			todayMax: this.today.max,
-			todayCount: this.today.count
-		};
-	},
-
 	melgeCurrentState: function(currentState) {
-console.log('melging: ' + currentState.numTabs + ' ' + this.maxTabsEver);
-		if (currentState.numTabs > this.maxTabsEver) {
-			this.maxTabsEver = currentState.numTabs;
+console.log('melging: ' + currentState.numTabs + ' ' + this.data.maxTabsEver);
+		if (currentState.numTabs > this.data.maxTabsEver) {
+			this.data.maxTabsEver = currentState.numTabs;
 		}
-console.log('melging: ' + currentState.numTabs + ' ' + this.today.max);
-console.log(this.today.token);
-		if (this.today.token == this.getToday()) {
-			if (currentState.numTabs > this.today.max) {
-				this.today.max = currentState.numTabs;
+console.log('melging: ' + currentState.numTabs + ' ' + this.data.today.max);
+console.log(this.data.today.token);
+		if (this.data.today.token == this.getToday()) {
+			if (currentState.numTabs > this.data.today.max) {
+				this.data.today.max = currentState.numTabs;
 			}
 		}
 
@@ -144,13 +114,15 @@ console.log(this.today.token);
 
 	reset: function() {
 console.log('resetting');
-		this.totalCreated = 0,
-		this.totalRemoved = 0,
-		this.maxTabsEver = 0,
-		this.today = {
-			token: this.getToday(),
-			count: 0,
-			max: 0
+		this.data = {
+			totalCreated: 0,
+			totalRemoved: 0,
+			maxTabsEver: 0,
+			today: {
+				token: this.getToday(),
+				count: 0,
+				max: 0
+			}
 		};
 	},
 
@@ -167,12 +139,12 @@ console.log('resetting');
 	},
 
 	addTab: function() {
-		this.totalCreated++;
-		this.today.count++;	
+		this.data.totalCreated++;
+		this.data.today.count++;	
 	},
 
 	removeTab: function() {
-		this.totalRemoved++;
+		this.data.totalRemoved++;
 	}
 }
 

@@ -11,13 +11,14 @@ initView = function() {
 		document.getElementById('maxEver').innerHTML = JSON.stringify(data.totals.maxTabsEver);
 		document.getElementById('totalCreated').innerHTML = JSON.stringify(data.totals.totalCreated);
 		document.getElementById('totalRemoved').innerHTML = JSON.stringify(data.totals.totalRemoved);
-		document.getElementById('todayCount').innerHTML = JSON.stringify(data.totals.todayCount);
-		document.getElementById('todayMax').innerHTML = JSON.stringify(data.totals.todayMax);
+		document.getElementById('todayCount').innerHTML = JSON.stringify(data.totals.today.count);
+		document.getElementById('todayMax').innerHTML = JSON.stringify(data.totals.today.max);
 		document.getElementById('recordsBegan').innerHTML = new Date(data.recordsBegan).toDateString();
 	});
 };
 
 resetPressed = function() {
+	console.log('resetting');
 	chrome.storage.local.remove('history');
 
 	//Maybe don't want this going forward, but good for developing
