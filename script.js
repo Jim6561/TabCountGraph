@@ -2,8 +2,8 @@ initView = function() {
 	document.getElementById('resetButton').addEventListener('click', resetPressed);
 
 	chrome.storage.local.get(['history', 'recordsBegan', 'currentState', 'totals'], function(data) {
-	
-	console.log(data);
+		console.log('script');
+		console.log(data);
 	
 		document.getElementById('openTabs').innerHTML = JSON.stringify(data.currentState.numTabs);
 		document.getElementById('openWindows').innerHTML = JSON.stringify(data.currentState.numWindows);
@@ -11,6 +11,8 @@ initView = function() {
 		document.getElementById('maxEver').innerHTML = JSON.stringify(data.totals.maxTabsEver);
 		document.getElementById('totalCreated').innerHTML = JSON.stringify(data.totals.totalCreated);
 		document.getElementById('totalRemoved').innerHTML = JSON.stringify(data.totals.totalRemoved);
+		document.getElementById('todayCount').innerHTML = JSON.stringify(data.totals.todayCount);
+		document.getElementById('todayMax').innerHTML = JSON.stringify(data.totals.todayMax);
 		document.getElementById('recordsBegan').innerHTML = new Date(data.recordsBegan).toDateString();
 	});
 };

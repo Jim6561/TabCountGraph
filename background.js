@@ -100,7 +100,7 @@ totalsObj = {
 	totalCreated: 0,
 	totalRemoved: 0,
 	maxTabsEver: 0,
-	createdToday: null,
+	today: null,
 	//createdThisYear: null,
 
 	populate: function(dataFromStorage) {
@@ -108,9 +108,10 @@ console.log('populate: ' + JSON.stringify(dataFromStorage));
 		this.totalCreated = dataFromStorage.totalCreated,
 		this.totalRemoved = dataFromStorage.totalRemoved,
 		this.maxTabsEver = dataFromStorage.maxTabsEver,
-		this.createdToday = {
-			token: dataFromStorage.createdTodayToken,
-			count: dataFromStorage.createTodayCount
+		this.today = {
+			token: dataFromStorage.todayToken,
+			count: dataFromStorage.todayCount,
+			max: dataFromStorage.todayMax
 		};
 	},
 
@@ -120,8 +121,9 @@ console.log('populate: ' + JSON.stringify(dataFromStorage));
 			totalCreated: this.totalCreated,
 			totalRemoved: this.totalRemoved,
 			maxTabsEver: this.maxTabsEver,
-			createdTodayToken: this.createdToday.token,
-			createTodayCount: this.createdToday.count
+			todayToken: this.today.token,
+			todayMax: this.today.max,
+			todayCount: this.today.count
 		};
 	},
 
@@ -130,6 +132,13 @@ console.log('melging: ' + currentState.numTabs + ' ' + this.maxTabsEver);
 		if (currentState.numTabs > this.maxTabsEver) {
 			this.maxTabsEver = currentState.numTabs;
 		}
+console.log('melging: ' + currentState.numTabs + ' ' + this.today.max);
+console.log(this.today.token);
+		if (this.today.token == this.getToday()) {
+			if (currentState.numTabs > this.today.max) {
+				this.today.max = currentState.numTabs;
+			}
+		}
 
 	},
 
@@ -137,9 +146,11 @@ console.log('melging: ' + currentState.numTabs + ' ' + this.maxTabsEver);
 console.log('resetting');
 		this.totalCreated = 0,
 		this.totalRemoved = 0,
-		this.createdToday = {
+		this.maxTabsEver = 0,
+		this.today = {
 			token: this.getToday(),
-			count: 0
+			count: 0,
+			max: 0
 		};
 	},
 
@@ -148,7 +159,7 @@ console.log('resetting');
 		d.setSeconds(0);
 		d.setMinutes(0);
 		d.setHours(0);
-		return d;
+		return d.toString();
 	},
 
 	getThisYear: function() {
@@ -156,7 +167,8 @@ console.log('resetting');
 	},
 
 	addTab: function() {
-		this.totalCreated++;		
+		this.totalCreated++;
+		this.today.count++;	
 	},
 
 	removeTab: function() {
