@@ -1,20 +1,32 @@
-onTabsChange = function(tab) {
+onTabCreated = function(tab) {
+	onTabsChange({action: 'create'});
+}
+
+onTabRemoved = function(tab) {
+	onTabsChange({action: 'remove'});
+}
+
+onTabsChange = function(input) {
 	chrome.windows.getAll({populate: true}, function(windows) {
-		let currentState = {
+		var currentState = {
 			numTabs: 0,
 			numWindows: 0,
-			maxTabs: 0	
+			busiestWindow: 0
 		};
 		
 		for (var i = 0; i<windows.length; i++) {
 			currentState.numWindows++;	
-			let thisTabs = windows[i].tabs.length;
+			var thisTabs = windows[i].tabs.length;
 
 			currentState.numTabs += thisTabs;
-			if (thisTabs > currentState.maxTabs) {
-				currentState.maxTabs = thisTabs;
+			if (thisTabs > currentState.busiestWindow) {
+				currentState.busiestWindow = thisTabs;
 			}
 		}
+
+		chrome.storage.local.get('totals', function(data) {
+			updateTotals(data, input, currentState);
+		});
 		
 		chrome.storage.local.set({'currentState': currentState});
 		
@@ -25,13 +37,38 @@ onTabsChange = function(tab) {
 			}
 		
 			currentState.timestamp = Date.now();
-			data.history.push({currentState});
+			data.history.push(currentState);
 			chrome.storage.local.set(data);
 		});
 
 		updateBadge(currentState.numTabs);
 	});
 };
+
+updateTotals = function(data, input, currentState) {
+	console.log(data);
+	console.log(input);
+	
+	if (data.totals) {
+		totalsObj.populate(data.totals);
+	} else {
+		totalsObj.reset();
+	}
+
+	if (currentState) {
+		totalsObj.melgeCurrentState(currentState);
+	}
+
+	if (input && input.action) {		
+		if (input.action === 'create') {
+			totalsObj.addTab();
+		} else if (input.action === 'remove') {
+			totalsObj.removeTab();
+		}
+	}
+
+	chrome.storage.local.set({'totals': totalsObj.writeForStorage()});
+}
 
 updateBadge = function(numberTabs) {
 	chrome.browserAction.setBadgeText({text: '' + numberTabs});
@@ -57,8 +94,78 @@ updateBadge = function(numberTabs) {
 	chrome.browserAction.setBadgeBackgroundColor({color: color});
 };
 
-chrome.tabs.onCreated.addListener(onTabsChange);
-chrome.tabs.onRemoved.addListener(onTabsChange);
 
+totalsObj = {
+
+	totalCreated: 0,
+	totalRemoved: 0,
+	maxTabsEver: 0,
+	createdToday: null,
+	//createdThisYear: null,
+
+	populate: function(dataFromStorage) {
+console.log('populate: ' + JSON.stringify(dataFromStorage));
+		this.totalCreated = dataFromStorage.totalCreated,
+		this.totalRemoved = dataFromStorage.totalRemoved,
+		this.maxTabsEver = dataFromStorage.maxTabsEver,
+		this.createdToday = {
+			token: dataFromStorage.createdTodayToken,
+			count: dataFromStorage.createTodayCount
+		};
+	},
+
+	writeForStorage: function() {
+		console.log('writing');
+		return {
+			totalCreated: this.totalCreated,
+			totalRemoved: this.totalRemoved,
+			maxTabsEver: this.maxTabsEver,
+			createdTodayToken: this.createdToday.token,
+			createTodayCount: this.createdToday.count
+		};
+	},
+
+	melgeCurrentState: function(currentState) {
+console.log('melging: ' + currentState.numTabs + ' ' + this.maxTabsEver);
+		if (currentState.numTabs > this.maxTabsEver) {
+			this.maxTabsEver = currentState.numTabs;
+		}
+
+	},
+
+	reset: function() {
+console.log('resetting');
+		this.totalCreated = 0,
+		this.totalRemoved = 0,
+		this.createdToday = {
+			token: this.getToday(),
+			count: 0
+		};
+	},
+
+	getToday: function() {
+		var d = new Date();
+		d.setSeconds(0);
+		d.setMinutes(0);
+		d.setHours(0);
+		return d;
+	},
+
+	getThisYear: function() {
+		return (new Date().getYear());
+	},
+
+	addTab: function() {
+		this.totalCreated++;		
+	},
+
+	removeTab: function() {
+		this.totalRemoved++;
+	}
+}
+
+
+chrome.tabs.onCreated.addListener(onTabCreated);
+chrome.tabs.onRemoved.addListener(onTabRemoved);
 
 onTabsChange(); // just call it once for when you first load it up
