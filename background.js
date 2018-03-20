@@ -98,18 +98,20 @@ updateBadge = function(numberTabs) {
 totalsObj = {
 
 	melgeCurrentState: function(currentState) {
-console.log('melging: ' + currentState.numTabs + ' ' + this.data.maxTabsEver);
 		if (currentState.numTabs > this.data.maxTabsEver) {
 			this.data.maxTabsEver = currentState.numTabs;
 		}
-console.log('melging: ' + currentState.numTabs + ' ' + this.data.today.max);
-console.log(this.data.today.token);
+console.log('token: ' + this.data.today.token + ' today: ' + this.getToday());
 		if (this.data.today.token == this.getToday()) {
 			if (currentState.numTabs > this.data.today.max) {
 				this.data.today.max = currentState.numTabs;
-			}
+			} 
+		} else {
+console.log('new day!');
+			this.data.today.token = this.getToday();
+			this.data.today.max = currentState.numTabs;
+			this.data.today.count = 0;
 		}
-
 	},
 
 	reset: function() {
