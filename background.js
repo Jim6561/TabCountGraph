@@ -90,7 +90,6 @@ updateBadge = function(numberTabs) {
 		color = [255,0,0,255];
 	}
 	
-	
 	chrome.browserAction.setBadgeBackgroundColor({color: color});
 };
 
@@ -101,53 +100,101 @@ totalsObj = {
 		if (currentState.numTabs > this.data.maxTabsEver) {
 			this.data.maxTabsEver = currentState.numTabs;
 		}
-console.log('token: ' + this.data.today.token + ' today: ' + this.getToday());
-		if (this.data.today.token == this.getToday()) {
-			if (currentState.numTabs > this.data.today.max) {
-				this.data.today.max = currentState.numTabs;
-			} 
+
+		this.melgeDatePart(this.data.today, currentState.numTabs, getToday);
+		this.melgeDatePart(this.data.thisWeek, currentState.numTabs, getThisWeek);
+		this.melgeDatePart(this.data.thisMonth, currentState.numTabs, getThisMonth);
+		this.melgeDatePart(this.data.thisYear, currentState.numTabs, getThisYear);
+
+	},
+
+	melgeDatePart: function(datePartCounter, numTabs, calculateToken) {
+
+console.log('token: ' + this.data.today.token + ' today: ' + calculateToken());
+console.log(datePartCounter);
+		if (datePartCounter.token == calculateToken()) {
+			if (numTabs > datePartCounter.max) {
+				datePartCounter.max = numTabs;
+			}
 		} else {
 console.log('new day!');
-			this.data.today.token = this.getToday();
-			this.data.today.max = currentState.numTabs;
-			this.data.today.count = 0;
+			datePartCounter.token = calculateToken();
+			datePartCounter.max = numTabs;
+			datePartCounter.count = 0;
 		}
 	},
 
 	reset: function() {
-console.log('resetting');
+		console.log('resetting');
 		this.data = {
 			totalCreated: 0,
 			totalRemoved: 0,
 			maxTabsEver: 0,
 			today: {
-				token: this.getToday(),
+				token: null,
+				count: 0,
+				max: 0
+			},
+			thisWeek: {
+				token: null,
+				count: 0,
+				max: 0
+			},
+			thisMonth: {
+				token: null,
+				count: 0,
+				max: 0
+			},
+			thisYear: {
+				token: null,
 				count: 0,
 				max: 0
 			}
 		};
 	},
 
-	getToday: function() {
-		var d = new Date();
-		d.setSeconds(0);
-		d.setMinutes(0);
-		d.setHours(0);
-		return d.toString();
-	},
-
-	getThisYear: function() {
-		return (new Date().getYear());
-	},
-
 	addTab: function() {
 		this.data.totalCreated++;
-		this.data.today.count++;	
+		this.data.today.count++;
+		this.data.thisWeek.count++;
+		this.data.thisMonth.count++;
+		this.data.thisYear.count++;
 	},
 
 	removeTab: function() {
 		this.data.totalRemoved++;
 	}
+}
+
+
+getToday = function() {
+	var d = new Date();
+	d.setSeconds(0);
+	d.setMinutes(0);
+	d.setHours(0);
+	return d.toString();
+}
+
+//Weeks start on Sunday. It just makes it easier
+getThisWeek = function() {
+	var d = new Date(),
+		dayOfWeekCount = d.getDay();
+	d.setSeconds(0);
+	d.setMinutes(0);
+	d.setHours(0);
+	d.setDate(d.getDate() - dayOfWeekCount);
+	return d.toString();
+}
+
+getThisMonth = function() {
+	var now = new Date(),
+		monthToken = now.getFullYear() + ' ' + now.getMonth();
+	return monthToken;
+}
+
+getThisYear = function() {
+	var yearToken = (new Date()).getFullYear();
+	return yearToken;
 }
 
 
