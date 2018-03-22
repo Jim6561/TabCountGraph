@@ -9,7 +9,7 @@ initView = function() {
 
 	document.getElementById('monthHeader').innerHTML = getMonth(new Date());
 
-	chrome.storage.local.get(['history', 'recordsBegan', 'currentState', 'totals'], function(data) {
+	chrome.storage.local.get(['recordsBegan', 'currentState', 'totals'], function(data) {
 		console.log('script');
 		console.log(data);
 	

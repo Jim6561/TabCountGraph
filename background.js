@@ -93,7 +93,6 @@ updateBadge = function(numberTabs) {
 	chrome.browserAction.setBadgeBackgroundColor({color: color});
 };
 
-
 totalsObj = {
 
 	melgeCurrentState: function(currentState) {
@@ -101,24 +100,22 @@ totalsObj = {
 			this.data.maxTabsEver = currentState.numTabs;
 		}
 
-		this.melgeDatePart(this.data.today, currentState.numTabs, getToday);
-		this.melgeDatePart(this.data.thisWeek, currentState.numTabs, getThisWeek);
-		this.melgeDatePart(this.data.thisMonth, currentState.numTabs, getThisMonth);
-		this.melgeDatePart(this.data.thisYear, currentState.numTabs, getThisYear);
+		this.melgeDatePart(this.data.today, currentState.numTabs, getToday());
+		this.melgeDatePart(this.data.thisWeek, currentState.numTabs, getThisWeek());
+		this.melgeDatePart(this.data.thisMonth, currentState.numTabs, getThisMonth());
+		this.melgeDatePart(this.data.thisYear, currentState.numTabs, getThisYear());
 
 	},
 
-	melgeDatePart: function(datePartCounter, numTabs, calculateToken) {
-
-console.log('token: ' + this.data.today.token + ' today: ' + calculateToken());
-console.log(datePartCounter);
-		if (datePartCounter.token == calculateToken()) {
+	melgeDatePart: function(datePartCounter, numTabs, freshToken) {
+		console.log('cachedToken: ' + datePartCounter.token + ' freshToken: ' + freshToken);
+		if (datePartCounter.token == freshToken) {
 			if (numTabs > datePartCounter.max) {
 				datePartCounter.max = numTabs;
 			}
 		} else {
-console.log('new day!');
-			datePartCounter.token = calculateToken();
+			console.log('new time period thingy');
+			datePartCounter.token = freshToken;
 			datePartCounter.max = numTabs;
 			datePartCounter.count = 0;
 		}
@@ -166,7 +163,6 @@ console.log('new day!');
 	}
 }
 
-
 getToday = function() {
 	var d = new Date();
 	d.setSeconds(0);
@@ -196,7 +192,6 @@ getThisYear = function() {
 	var yearToken = (new Date()).getFullYear();
 	return yearToken;
 }
-
 
 chrome.tabs.onCreated.addListener(onTabCreated);
 chrome.tabs.onRemoved.addListener(onTabRemoved);
