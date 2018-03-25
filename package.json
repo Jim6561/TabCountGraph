@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack --mode production",
     "buildDev": "webpack --mode development",
+    "babel": "babel src --out-file output/script.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,6 +21,7 @@
   },
   "homepage": "https://github.com/Jim6561/TabCountGraph#readme",
   "dependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",

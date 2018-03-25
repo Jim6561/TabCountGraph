@@ -1,0 +1,6 @@
+.project
+.eslintrc.*
+node_modules
+
+#This file is generated
+output/script.js
