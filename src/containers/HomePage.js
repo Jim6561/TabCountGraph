@@ -11,31 +11,33 @@ class Homepage extends React.Component {
 		//We need to set state to something. We end up rendering the component before the call back
 		//from storage.local.get executes and sets it properly
     	this.state = {
-    		"recordsBegan": 0,
-    		"currentState": {},
-    		"totals": {}
+    		'recordsBegan': 0,
+    		'currentState': {},
+    		'totals': {}
     	};
 
-		chrome.storage.local.get(['recordsBegan', 'currentState', 'totals'], function(data) {
-console.log('1');
-console.log(data.totals);	
+		chrome.storage.local.get(['recordsBegan', 'currentState', 'totals'], (data) => {
 			me.setState({
-				"recordsBegan": data.recordsBegan,
-				"currentState": data.currentState,
-				"totals": data.totals
+				'recordsBegan': data.recordsBegan,
+				'currentState': data.currentState,
+				'totals': data.totals
 			});
 		});
-		console.log('4');
 
 		this.resetPressed = this.resetPressed.bind(this);
 	}
 
 	resetPressed(event) {
 		var me = this;
+
+		chrome.storage.local.remove('history');
+		chrome.storage.local.remove('totals');
+
 		chrome.tabs.query({}, function(result) {
-			var numTabs = result.length;
+			var numTabs = result.length,
+				resetTotals =  {'totalCreated': 0, 'totalRemoved': 0, 'maxTabsEver': numTabs};
 			me.setState({
-				'totals': {"totalCreated": 0, "totalRemoved": 0, "maxTabsEver": numTabs},
+				'totals': resetTotals,
 				'recordsBegan': Date.now()
 			});
 		});
@@ -44,7 +46,7 @@ console.log(data.totals);
 	render() {
 		return (
 			<div>
-				<h1>Jim's amazing extension</h1>
+				<h1>Jim&apos;s amazing extension</h1>
 
 				<h2>Tabs open</h2>
 				<div>{this.state.currentState.numTabs}</div>
