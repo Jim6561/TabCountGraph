@@ -44,6 +44,12 @@ class Homepage extends React.Component {
 		});
 	}
 
+	getMonth() {
+		var monthIndex = (new Date()).getMonth();
+		var monthNames = ["January", "February", "March","April", "May", "June", "July","August", "September", "October","November", "December"];
+		return monthNames[monthIndex];
+	}
+
 	render() {
 		return (
 			<div>
@@ -63,7 +69,7 @@ class Homepage extends React.Component {
 
 				<DatePartSummary label='Today' count={this.state.totals.today.count} max={this.state.totals.today.max}/>
 				<DatePartSummary label='This Week' count={this.state.totals.thisWeek.count} max={this.state.totals.thisWeek.max}/>
-				<DatePartSummary label='This Month' count={this.state.totals.thisMonth.count} max={this.state.totals.thisMonth.max}/>
+				<DatePartSummary label={this.getMonth()} count={this.state.totals.thisMonth.count} max={this.state.totals.thisMonth.max}/>
 				<DatePartSummary label='This Year' count={this.state.totals.thisYear.count} max={this.state.totals.thisYear.max}/>
 
 				<h2>Records began</h2>
