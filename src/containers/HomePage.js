@@ -1,4 +1,5 @@
 import React from 'react';
+import DatePartSummary from '../components/DatePartSummary.js'
  
 /**
  * A counter button: tap the button to increase the count.
@@ -13,7 +14,7 @@ class Homepage extends React.Component {
     	this.state = {
     		'recordsBegan': 0,
     		'currentState': {},
-    		'totals': {}
+    		'totals': {'today': {}, 'thisWeek': {}, 'thisMonth': {}, 'thisYear': {}}
     	};
 
 		chrome.storage.local.get(['recordsBegan', 'currentState', 'totals'], (data) => {
@@ -59,6 +60,11 @@ class Homepage extends React.Component {
 
 				<h2>Ever</h2>
 				<p>Opened: {this.state.totals.totalCreated} Closed: {this.state.totals.totalRemoved} Max: {this.state.totals.maxTabsEver}</p>
+
+				<DatePartSummary label='Today' count={this.state.totals.today.count} max={this.state.totals.today.max}/>
+				<DatePartSummary label='This Week' count={this.state.totals.thisWeek.count} max={this.state.totals.thisWeek.max}/>
+				<DatePartSummary label='This Month' count={this.state.totals.thisMonth.count} max={this.state.totals.thisMonth.max}/>
+				<DatePartSummary label='This Year' count={this.state.totals.thisYear.count} max={this.state.totals.thisYear.max}/>
 
 				<h2>Records began</h2>
 				{new Date(this.state.recordsBegan).toDateString()}
