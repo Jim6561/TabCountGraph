@@ -1,4 +1,13 @@
 body {
     background-color: lavender;
-    width: 300px;
+}
+
+.mainTable {
+	font-family: system-ui, sans-serif;
+    font-size: 100%;
+    width: 720px;
+}
+
+.graphHolder {
+	background-color: pink;
 }

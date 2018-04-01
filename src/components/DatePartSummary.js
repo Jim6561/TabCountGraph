@@ -11,7 +11,7 @@ class DatePartSummary extends React.Component {
   render() {
     return (
       <div>
-        <h2>{this.props.label}</h2>
+        <h3>{this.props.label}</h3>
         Opened: {this.props.count} Max: {this.props.max}
       </div>
     );
