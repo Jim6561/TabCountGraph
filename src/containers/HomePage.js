@@ -1,5 +1,6 @@
 import React from 'react';
 import DatePartSummary from '../components/DatePartSummary.js'
+import MyGraph from '../components/MyGraph.js'
  
 /**
  * A counter button: tap the button to increase the count.
@@ -14,14 +15,16 @@ class Homepage extends React.Component {
     	this.state = {
     		'recordsBegan': 0,
     		'currentState': {},
-    		'totals': {'today': {}, 'thisWeek': {}, 'thisMonth': {}, 'thisYear': {}}
+    		'totals': {'today': {}, 'thisWeek': {}, 'thisMonth': {}, 'thisYear': {}},
+    		'chartData': []
     	};
 
-		chrome.storage.local.get(['recordsBegan', 'currentState', 'totals'], (data) => {
+		chrome.storage.local.get(['recordsBegan', 'currentState', 'totals', 'history'], (data) => {
 			me.setState({
 				'recordsBegan': data.recordsBegan,
 				'currentState': data.currentState,
-				'totals': data.totals
+				'totals': data.totals,
+				'chartData': me.getChartData(data.history)
 			});
 		});
 
@@ -50,30 +53,65 @@ class Homepage extends React.Component {
 		return monthNames[monthIndex];
 	}
 
+	getChartData(history) {
+		console.log('history');
+		console.log(history);
+		var toReturn = history.map((element) => [element.timestamp, element.numTabs]);
+		console.log(toReturn);
+		return toReturn;
+	}
+
 	render() {
 		return (
 			<div>
 				<h1>Jim&apos;s amazing extension</h1>
+				<table class='mainTable'>
+					<tbody>
+						<tr>
+							<td>
+								<h3>Tabs open</h3>
+								<div>{this.state.currentState.numTabs}</div>
+							</td>
+							<td>
+								<h3>Windows open</h3>
+								<div>{this.state.currentState.numWindows}</div>
+							</td>
+							<td>
+								<h3>Tabs in busiest window</h3>
+								<div>{this.state.currentState.busiestWindow}</div>
+							</td>
+							<td>
+								<h3>Ever</h3>
+								<p>Opened: {this.state.totals.totalCreated} Closed: {this.state.totals.totalRemoved} Max: {this.state.totals.maxTabsEver}</p>
+							</td>
+						</tr>
+						<tr>
+							<td colspan='3' rowspan='4'>
+								<MyGraph data={this.state.chartData} size={[600,300]}/>
+							</td>
+							<td>
+								<DatePartSummary label='Today' count={this.state.totals.today.count} max={this.state.totals.today.max}/>
+							</td>
+						</tr>
+						<tr><td>
+							<DatePartSummary label='This Week' count={this.state.totals.thisWeek.count} max={this.state.totals.thisWeek.max}/>
+						</td></tr>
+						<tr><td>
+							<DatePartSummary label={this.getMonth()} count={this.state.totals.thisMonth.count} max={this.state.totals.thisMonth.max}/>
+						</td></tr>
+						<tr><td>
+							<DatePartSummary label='This Year' count={this.state.totals.thisYear.count} max={this.state.totals.thisYear.max}/>
+						</td></tr>
+					</tbody>
+				</table>
 
-				<h2>Tabs open</h2>
-				<div>{this.state.currentState.numTabs}</div>
+				
+				
 
-				<h2>Windows open</h2>
-				<div>{this.state.currentState.numWindows}</div>
-
-				<h2>Tabs in busiest window</h2>
-				<div>{this.state.currentState.busiestWindow}</div>
-
-				<h2>Ever</h2>
-				<p>Opened: {this.state.totals.totalCreated} Closed: {this.state.totals.totalRemoved} Max: {this.state.totals.maxTabsEver}</p>
-
-				<DatePartSummary label='Today' count={this.state.totals.today.count} max={this.state.totals.today.max}/>
-				<DatePartSummary label='This Week' count={this.state.totals.thisWeek.count} max={this.state.totals.thisWeek.max}/>
-				<DatePartSummary label={this.getMonth()} count={this.state.totals.thisMonth.count} max={this.state.totals.thisMonth.max}/>
-				<DatePartSummary label='This Year' count={this.state.totals.thisYear.count} max={this.state.totals.thisYear.max}/>
-
-				<h2>Records began</h2>
+				<h3>Records began</h3>
 				{new Date(this.state.recordsBegan).toDateString()}
+
+				
 
 				<div><button onClick={this.resetPressed}>Reset History</button></div>
 			</div>
