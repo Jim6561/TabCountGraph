@@ -1,7 +1,9 @@
 import React from 'react';
 import { scaleLinear } from 'd3-scale';
-import { max, min } from 'd3-array';
+import { max, extent } from 'd3-array';
+import { axisBottom, axisLeft } from 'd3-axis';
 import { select } from 'd3-selection';
+import { timeFormat } from 'd3-time-format';
 
 class MyGraph extends React.Component {
     constructor(props){
@@ -20,17 +22,26 @@ class MyGraph extends React.Component {
         const node = this.node;
         const timestamps = this.props.data.map(element => element[0]);
         const values = this.props.data.map(element => element[1]);
-        const timeStart = min(timestamps);
-        const timeEnd = max(timestamps);
         const dataMax = max(values);
+        const axisBorder = 25;
+        const padding = 10;
+        const graphHeight = this.props.size[1] - (axisBorder + padding);
 
         const xScale = scaleLinear()
-            .domain([timeStart, timeEnd])
-            .range([0, this.props.size[0] - 1]);
+            .domain(extent(timestamps))
+            .range([0, this.props.size[0] - (axisBorder + padding)]);
 
         const yScale = scaleLinear()
             .domain([0, dataMax])
-            .range([0, this.props.size[1] - 1]);
+            .range([graphHeight, 0]);
+
+        const xAxis = axisBottom()
+            .scale(xScale)
+            .ticks(5)
+            .tickFormat(timeFormat('%d %m %Y'));
+        const yAxis = axisLeft()
+            .scale(yScale)
+            .ticks(5);
 
         select(node)
             .selectAll('rect')
@@ -46,10 +57,19 @@ class MyGraph extends React.Component {
             .selectAll('rect')
             .data(this.props.data)
             .style('fill', 'blue')
-            .attr('x', d => xScale(d[0]) )
-            .attr('y', d => this.props.size[1] - yScale(d[1]))
-            .attr('height', d => yScale(d[1]) )
+            .attr('x', d => axisBorder + xScale(d[0]) )
+            .attr('y', d => yScale(d[1]) + padding)
+            .attr('height', d => graphHeight - yScale(d[1]) )
             .attr('width', 1);
+
+        select(node)
+            .append('g')
+            .attr('transform', 'translate(' + axisBorder + ', ' + (graphHeight + padding) + ')')
+            .call(xAxis);
+        select(node)
+            .append('g')
+            .attr('transform', 'translate(' + axisBorder + ',' + padding + ')')
+            .call(yAxis);
     }
 
     render() {

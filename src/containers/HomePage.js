@@ -64,7 +64,6 @@ class Homepage extends React.Component {
 	render() {
 		return (
 			<div>
-				<h1>Jim&apos;s amazing extension</h1>
 				<table class='mainTable'>
 					<tbody>
 						<tr>
@@ -80,19 +79,19 @@ class Homepage extends React.Component {
 								<h3>Tabs in busiest window</h3>
 								<div>{this.state.currentState.busiestWindow}</div>
 							</td>
+						</tr>
+						<tr>
+							<td colspan='3' rowspan='5'>
+								<MyGraph data={this.state.chartData} size={[600,300]}/>
+							</td>
 							<td>
 								<h3>Ever</h3>
 								<p>Opened: {this.state.totals.totalCreated} Closed: {this.state.totals.totalRemoved} Max: {this.state.totals.maxTabsEver}</p>
 							</td>
 						</tr>
-						<tr>
-							<td colspan='3' rowspan='4'>
-								<MyGraph data={this.state.chartData} size={[600,300]}/>
-							</td>
-							<td>
-								<DatePartSummary label='Today' count={this.state.totals.today.count} max={this.state.totals.today.max}/>
-							</td>
-						</tr>
+						<tr><td>
+							<DatePartSummary label='Today' count={this.state.totals.today.count} max={this.state.totals.today.max}/>
+						</td></tr>
 						<tr><td>
 							<DatePartSummary label='This Week' count={this.state.totals.thisWeek.count} max={this.state.totals.thisWeek.max}/>
 						</td></tr>
