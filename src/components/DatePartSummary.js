@@ -11,7 +11,7 @@ class DatePartSummary extends React.Component {
 
   handleClick() {
     console.log('handleClick');
-    this.props.changeDatePart(this.props.label);
+    this.props.changeDatePart(this.props.dateType);
   }
 
   render() {
