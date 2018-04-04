@@ -19,16 +19,22 @@ class Homepage extends React.Component {
     		'chartData': []
     	};
 
-		chrome.storage.local.get(['recordsBegan', 'currentState', 'totals', 'history'], (data) => {
+		chrome.storage.local.get(['recordsBegan', 'currentState', 'totals', 'history', 'selectedDateType'], (data) => {
+			console.log('getStorage:');
+			console.log(data);
+			let dateType = data.selectedDateType ? data.selectedDateType : 'Today';
+			console.log('dateType: ' + dateType);
 			me.setState({
 				'recordsBegan': data.recordsBegan,
 				'currentState': data.currentState,
 				'totals': data.totals,
-				'chartData': me.getChartData(data.history)
+				'chartData': me.getChartData(data.history),
+				'dateType': dateType
 			});
 		});
 
 		this.resetPressed = this.resetPressed.bind(this);
+		this.changeDateRange = this.changeDateRange.bind(this);
 	}
 
 	resetPressed(event) {
@@ -47,6 +53,12 @@ class Homepage extends React.Component {
 		});
 	}
 
+	changeDateRange(dateType) {
+		console.log('change dateType: ' + dateType);
+		this.setState({'dateType': dateType});
+		chrome.storage.local.set({'selectedDateType': dateType});
+	}
+
 	getMonth() {
 		var monthIndex = (new Date()).getMonth();
 		var monthNames = ["January", "February", "March","April", "May", "June", "July","August", "September", "October","November", "December"];
@@ -54,14 +66,11 @@ class Homepage extends React.Component {
 	}
 
 	getChartData(history) {
-		console.log('history');
-		console.log(history);
-		var toReturn = history.map((element) => [element.timestamp, element.numTabs]);
-		console.log(toReturn);
-		return toReturn;
+		return history.map((element) => [element.timestamp, element.numTabs]);
 	}
 
 	render() {
+		console.log('render dateType: ' + this.state.dateType);
 		return (
 			<div>
 				<table class='mainTable'>
@@ -85,33 +94,58 @@ class Homepage extends React.Component {
 								<MyGraph data={this.state.chartData} size={[600,300]}/>
 							</td>
 							<td>
-								<h3>Ever</h3>
-								<p>Opened: {this.state.totals.totalCreated} Closed: {this.state.totals.totalRemoved} Max: {this.state.totals.maxTabsEver}</p>
+								<DatePartSummary 
+									label='Today' 
+									opened={this.state.totals.today.count} 
+									max={this.state.totals.today.max} 
+									changeDatePart={this.changeDateRange}
+									isSelected={this.state.dateType === 'Today'}
+								/>
 							</td>
 						</tr>
 						<tr><td>
-							<DatePartSummary label='Today' count={this.state.totals.today.count} max={this.state.totals.today.max}/>
+							<DatePartSummary
+								label='This Week' 
+								opened={this.state.totals.thisWeek.count} 
+								max={this.state.totals.thisWeek.max} 
+								changeDatePart={this.changeDateRange}
+								isSelected={this.state.dateType === 'This Week'}
+								/>
 						</td></tr>
 						<tr><td>
-							<DatePartSummary label='This Week' count={this.state.totals.thisWeek.count} max={this.state.totals.thisWeek.max}/>
+							<DatePartSummary 
+								label={this.getMonth()} 
+								opened={this.state.totals.thisMonth.count} 
+								max={this.state.totals.thisMonth.max} 
+								changeDatePart={this.changeDateRange}
+								isSelected={this.state.dateType === this.getMonth()}
+								/>
 						</td></tr>
 						<tr><td>
-							<DatePartSummary label={this.getMonth()} count={this.state.totals.thisMonth.count} max={this.state.totals.thisMonth.max}/>
+							<DatePartSummary 
+								label='This Year' 
+								opened={this.state.totals.thisYear.count} 
+								max={this.state.totals.thisYear.max} 
+								changeDatePart={this.changeDateRange}
+								isSelected={this.state.dateType === 'This Year'}
+								/>
 						</td></tr>
 						<tr><td>
-							<DatePartSummary label='This Year' count={this.state.totals.thisYear.count} max={this.state.totals.thisYear.max}/>
+								<DatePartSummary label='Ever' 
+									opened={this.state.totals.totalCreated} 
+									closed={this.state.totals.totalRemoved} 
+									max={this.state.totals.maxTabsEver} 
+									changeDatePart={this.changeDateRange}
+									isSelected={this.state.dateType === 'Ever'}
+									/>
 						</td></tr>
 					</tbody>
 				</table>
 
 				
-				
-
 				<h3>Records began</h3>
 				{new Date(this.state.recordsBegan).toDateString()}
-
 				
-
 				<div><button onClick={this.resetPressed}>Reset History</button></div>
 			</div>
 		);

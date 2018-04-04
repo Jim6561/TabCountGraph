@@ -11,3 +11,25 @@ body {
 .graphHolder {
 	background-color: pink;
 }
+
+.datePartHeader {
+	margin-bottom: 10px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.datePartHeader:hover {
+	font-weight: bolder;
+	text-decoration: underline;
+}
+
+.datePartThingy {
+	background-color: plum;
+	border: thin solid black;
+	padding: 5px;
+	margin: 2px;
+}
+
+.datePartThingy-selected {
+	background-color: orchid;
+}
