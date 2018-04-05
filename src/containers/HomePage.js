@@ -19,16 +19,19 @@ class Homepage extends React.Component {
     		'chartData': []
     	};
 
-		chrome.storage.local.get(['recordsBegan', 'currentState', 'totals', 'history'], (data) => {
+		chrome.storage.local.get(['recordsBegan', 'currentState', 'totals', 'history', 'selectedDateType'], (data) => {
+			let dateType = data.selectedDateType ? data.selectedDateType : 'Today';
 			me.setState({
 				'recordsBegan': data.recordsBegan,
 				'currentState': data.currentState,
 				'totals': data.totals,
-				'chartData': me.getChartData(data.history)
-			});
+				//'chartData': me.getChartData(data.history),
+				'dateType': dateType
+			}, this.updateChartData);
 		});
 
 		this.resetPressed = this.resetPressed.bind(this);
+		this.changeDateRange = this.changeDateRange.bind(this);
 	}
 
 	resetPressed(event) {
@@ -53,12 +56,78 @@ class Homepage extends React.Component {
 		return monthNames[monthIndex];
 	}
 
-	getChartData(history) {
-		console.log('history');
-		console.log(history);
-		var toReturn = history.map((element) => [element.timestamp, element.numTabs]);
-		console.log(toReturn);
-		return toReturn;
+	changeDateRange(dateType) {
+		console.log('change dateType: ' + dateType);
+		this.setState({'dateType': dateType}, this.updateChartData);
+		chrome.storage.local.set({'selectedDateType': dateType});
+
+		// And then we change the contents of chartData
+		this.updateChartData();
+	}
+
+	updateChartData() {
+		console.log('dateType: ' + this.state.dateType);
+		var startDate;
+		//Let's work out the correct start date
+		switch(this.state.dateType) {
+			case 'Today':
+				startDate = this.getToday();
+				break;
+			case 'Week':
+				startDate = this.getThisWeek();
+				break;
+			case 'Month':
+				startDate = this.getThisMonth();
+				break;
+			case 'Year':
+				startDate = this.getThisYear();
+				break;
+			case 'Ever':
+				startDate = new Date('2014-01-01');
+				break;
+		}
+		console.log('startDate: ' + startDate);
+
+		chrome.storage.local.get(['history'], (data) => {
+			var chartData = [];
+
+			data.history.forEach((element) => {
+				if (element.timestamp > startDate) {
+					chartData.push([element.timestamp, element.numTabs]);
+				}
+			});
+
+			this.setState({'chartData': chartData});
+
+		});
+	}
+
+	getToday() {
+		var d = new Date();
+		d.setSeconds(0);
+		d.setMinutes(0);
+		d.setHours(0);
+		return d;
+	}
+
+	//Weeks start on Sunday. It just makes it easier
+	getThisWeek() {
+		var d = this.getToday(),
+			dayOfWeekCount = d.getDay();
+		d.setDate(d.getDate() - dayOfWeekCount);
+		return d;
+	}
+
+	getThisMonth() {
+		var d = this.getToday();
+		d.setDate(1);
+		return d;
+	}
+
+	getThisYear() {
+		var d = this.getThisMonth();
+		d.setMonth(0);
+		return d;
 	}
 
 	render() {
@@ -85,33 +154,64 @@ class Homepage extends React.Component {
 								<MyGraph data={this.state.chartData} size={[600,300]}/>
 							</td>
 							<td>
-								<h3>Ever</h3>
-								<p>Opened: {this.state.totals.totalCreated} Closed: {this.state.totals.totalRemoved} Max: {this.state.totals.maxTabsEver}</p>
+								<DatePartSummary 
+									label='Today'
+									dateType='Today'
+									opened={this.state.totals.today.count} 
+									max={this.state.totals.today.max} 
+									changeDatePart={this.changeDateRange}
+									isSelected={this.state.dateType === 'Today'}
+								/>
 							</td>
 						</tr>
 						<tr><td>
-							<DatePartSummary label='Today' count={this.state.totals.today.count} max={this.state.totals.today.max}/>
+							<DatePartSummary
+								label='This Week'
+								dateType='Week'
+								opened={this.state.totals.thisWeek.count} 
+								max={this.state.totals.thisWeek.max} 
+								changeDatePart={this.changeDateRange}
+								isSelected={this.state.dateType === 'Week'}
+							/>
 						</td></tr>
 						<tr><td>
-							<DatePartSummary label='This Week' count={this.state.totals.thisWeek.count} max={this.state.totals.thisWeek.max}/>
+							<DatePartSummary 
+								label={this.getMonth()}
+								dateType='Month'
+								opened={this.state.totals.thisMonth.count} 
+								max={this.state.totals.thisMonth.max} 
+								changeDatePart={this.changeDateRange}
+								isSelected={this.state.dateType === 'Month'}
+							/>
 						</td></tr>
 						<tr><td>
-							<DatePartSummary label={this.getMonth()} count={this.state.totals.thisMonth.count} max={this.state.totals.thisMonth.max}/>
+							<DatePartSummary 
+								label='This Year'
+								dateType='Year'
+								opened={this.state.totals.thisYear.count} 
+								max={this.state.totals.thisYear.max} 
+								changeDatePart={this.changeDateRange}
+								isSelected={this.state.dateType === 'Year'}
+							/>
 						</td></tr>
 						<tr><td>
-							<DatePartSummary label='This Year' count={this.state.totals.thisYear.count} max={this.state.totals.thisYear.max}/>
+							<DatePartSummary 
+								label='Ever' 
+								dateType='Ever'
+								opened={this.state.totals.totalCreated} 
+								closed={this.state.totals.totalRemoved} 
+								max={this.state.totals.maxTabsEver} 
+								changeDatePart={this.changeDateRange}
+								isSelected={this.state.dateType === 'Ever'}
+							/>
 						</td></tr>
 					</tbody>
 				</table>
 
 				
-				
-
 				<h3>Records began</h3>
 				{new Date(this.state.recordsBegan).toDateString()}
-
 				
-
 				<div><button onClick={this.resetPressed}>Reset History</button></div>
 			</div>
 		);
