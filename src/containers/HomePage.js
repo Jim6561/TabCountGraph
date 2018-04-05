@@ -119,13 +119,8 @@ class Homepage extends React.Component {
 	}
 
 	getThisMonth() {
-
-console.log('getting month');
-console.log(this.getToday());
-
 		var d = this.getToday();
 		d.setDate(1);
-console.log(d);
 		return d;
 	}
 
