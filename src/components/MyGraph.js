@@ -63,11 +63,18 @@ class MyGraph extends React.Component {
             .attr('width', 1);
 
         select(node)
-            .append('g')
-            .attr('transform', 'translate(' + axisBorder + ', ' + (graphHeight + padding) + ')')
-            .call(xAxis);
+            .selectAll('.xAxis, .yAxis')
+            .remove();
+
         select(node)
             .append('g')
+            .classed('xAxis', true)
+            .attr('transform', 'translate(' + axisBorder + ', ' + (graphHeight + padding) + ')')
+            .call(xAxis);
+
+        select(node)
+            .append('g')
+            .classed('yAxis', true)
             .attr('transform', 'translate(' + axisBorder + ',' + padding + ')')
             .call(yAxis);
     }
