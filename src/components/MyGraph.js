@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { scaleLinear, scaleTime } from 'd3-scale';
 import { max, extent } from 'd3-array';
 import { axisBottom, axisLeft } from 'd3-axis';
@@ -92,4 +93,11 @@ class MyGraph extends React.Component {
         </svg>
     }
 }
+
+MyGraph.propTypes = {
+  dateType: PropTypes.string.isRequired,
+  date: PropTypes.array.isRequired,
+  size: PropTypes.array.isRequired
+}
+
 export default MyGraph
