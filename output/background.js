@@ -72,6 +72,7 @@ updateTotals = function(data, input, currentState) {
 
 updateBadge = function(numberTabs) {
 	chrome.browserAction.setBadgeText({text: '' + numberTabs});
+	chrome.browserAction.setTitle({title: 'Tab Graph: Currently ' + numberTabs + ' open tabs'});
 	
 	var color;
 	if (numberTabs < 15) {

@@ -10,7 +10,7 @@
    
    "browser_action": {
       "default_icon": "triangle.png",
-      "default_title": "Hello everybody!",
+      "default_title": "Tab Graph",
       "default_popup": "main.html"
    },
    "permissions": [ "storage" ]
