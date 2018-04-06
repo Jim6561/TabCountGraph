@@ -151,7 +151,10 @@ class Homepage extends React.Component {
 						</tr>
 						<tr>
 							<td colspan='3' rowspan='5'>
-								<MyGraph data={this.state.chartData} size={[600,300]}/>
+								<MyGraph 
+									data={this.state.chartData}
+									size={[600,300]}
+									dateType = {this.state.dateType}/>
 							</td>
 							<td>
 								<DatePartSummary 

@@ -1,9 +1,13 @@
 import React from 'react';
-import { scaleLinear } from 'd3-scale';
+import { scaleLinear, scaleTime } from 'd3-scale';
 import { max, extent } from 'd3-array';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { select } from 'd3-selection';
 import { timeFormat } from 'd3-time-format';
+import { timeHour } from 'd3-time';
+
+const timeFormatter = timeFormat('%H:%M');
+const dateFormatter = timeFormat('%d %m %Y');
 
 class MyGraph extends React.Component {
     constructor(props){
@@ -27,7 +31,7 @@ class MyGraph extends React.Component {
         const padding = 10;
         const graphHeight = this.props.size[1] - (axisBorder + padding);
 
-        const xScale = scaleLinear()
+        const xScale = scaleTime()
             .domain(extent(timestamps))
             .range([0, this.props.size[0] - (axisBorder + padding)]);
 
@@ -35,10 +39,13 @@ class MyGraph extends React.Component {
             .domain([0, dataMax])
             .range([graphHeight, 0]);
 
+        const xTickFormatter = this.props.dateType === 'Today' ? timeFormatter : dateFormatter;
+        const xTickInterval = this.props.dateType === 'Today' ? timeHour.every(4) : 4;
+
         const xAxis = axisBottom()
             .scale(xScale)
-            .ticks(5)
-            .tickFormat(timeFormat('%d %m %Y'));
+            .ticks(xTickInterval)
+            .tickFormat(xTickFormatter);
         const yAxis = axisLeft()
             .scale(yScale)
             .ticks(5);
