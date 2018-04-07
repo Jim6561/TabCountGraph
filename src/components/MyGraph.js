@@ -49,7 +49,7 @@ class MyGraph extends React.Component {
             .range([graphHeight, 0]);
 
         const xTickFormatter = this.props.dateType === 'Today' ? timeFormatter : dateFormatter;
-        const xTickInterval = this.props.dateType === 'Today' ? timeHour.every(4) : 4;
+        const xTickInterval = this.props.dateType === 'Today' ? timeHour.every(3) : 4;
 
         const xAxis = axisBottom()
             .scale(xScale)
@@ -72,7 +72,7 @@ class MyGraph extends React.Component {
         select(node)
             .selectAll('rect')
             .data(this.props.data)
-            .style('fill', 'blue')
+            .style('fill', '#6060FF')
             .attr('x', d => axisBorder + xScale(d[0]) )
             .attr('y', d => yScale(d[1]) + padding)
             .attr('height', d => graphHeight - yScale(d[1]) )

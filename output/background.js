@@ -7,6 +7,7 @@ onTabRemoved = function(tab) {
 }
 
 onTabsChange = function(input) {
+	console.log('current time: ' + (new Date()));
 	chrome.windows.getAll({populate: true}, function(windows) {
 		var currentState = {
 			numTabs: 0,

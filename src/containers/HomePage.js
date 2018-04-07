@@ -1,6 +1,7 @@
 import React from 'react';
 import DatePartSummary from '../components/DatePartSummary.js'
 import MyGraph from '../components/MyGraph.js'
+import CurrentBox from '../components/CurrentBox.js'
  
 /**
  * A counter button: tap the button to increase the count.
@@ -136,24 +137,15 @@ class Homepage extends React.Component {
 				<table class='mainTable'>
 					<tbody>
 						<tr>
-							<td>
-								<h3>Tabs open</h3>
-								<div>{this.state.currentState.numTabs}</div>
-							</td>
-							<td>
-								<h3>Windows open</h3>
-								<div>{this.state.currentState.numWindows}</div>
-							</td>
-							<td>
-								<h3>Tabs in busiest window</h3>
-								<div>{this.state.currentState.busiestWindow}</div>
-							</td>
+							<td><CurrentBox label='Tabs open' value={this.state.currentState.numTabs} /></td>
+							<td><CurrentBox label='Windows open' value={this.state.currentState.numWindows} /></td>
+							<td><CurrentBox label='Tabs in busiest window' value={this.state.currentState.busiestWindow} /></td>
 						</tr>
 						<tr>
 							<td colspan='3' rowspan='5'>
 								<MyGraph 
 									data={this.state.chartData}
-									size={[600,300]}
+									size={[580,360]}
 									dateType = {this.state.dateType}/>
 							</td>
 							<td>
