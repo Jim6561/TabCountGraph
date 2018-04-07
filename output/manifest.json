@@ -2,7 +2,7 @@
    "manifest_version": 2,
    "version": "1.0",
    "name": "Tab Graph",
-   "description": "Statistics on the history how many tabs you have open.",
+   "description": "Statistics on the history of how many tabs you have open.",
 
    "background": {
       "scripts" : [ "background.js" ]
@@ -12,9 +12,9 @@
       "default_icon": {
          "19": "images/triangle_19.png",
          "38": "images/triangle_38.png"
-   },
-   "default_title": "Tab Graph",
-   "default_popup": "main.html"
+      },
+      "default_title": "Tab Graph",
+      "default_popup": "main.html"
    },
    "icons": {
       "128": "images/triangle_128.png",
