@@ -7,6 +7,7 @@ onTabRemoved = function(tab) {
 }
 
 onTabsChange = function(input) {
+	console.log('current time: ' + (new Date()));
 	chrome.windows.getAll({populate: true}, function(windows) {
 		var currentState = {
 			numTabs: 0,
@@ -72,6 +73,7 @@ updateTotals = function(data, input, currentState) {
 
 updateBadge = function(numberTabs) {
 	chrome.browserAction.setBadgeText({text: '' + numberTabs});
+	chrome.browserAction.setTitle({title: 'Tab Graph: Currently ' + numberTabs + ' open tabs'});
 	
 	var color;
 	if (numberTabs < 15) {

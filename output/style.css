@@ -1,0 +1,45 @@
+body {
+    background-color: #F8F8FB;
+}
+
+.mainTable {
+	font-family: system-ui, sans-serif;
+    font-size: 100%;
+    width: 700px;
+}
+
+.summaryBox {
+	text-align: center;
+	width: 180px;
+	padding: 5px;
+}
+.summaryBoxLabel {
+	font-size: 1.17em;
+	font-weight: bold;
+	margin-bottom: 0.5em;
+}
+.summaryBoxValue {
+
+}
+
+.datePartHeader {
+	margin-bottom: 10px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.datePartHeader:hover {
+	font-weight: bolder;
+	text-decoration: underline;
+}
+
+.datePartThingy {
+	background-color: #F0C8F0;
+	border: thin solid black;
+	padding: 5px;
+	margin: 2px;
+}
+
+.datePartThingy-selected {
+	background-color: #EA80E6;
+}
