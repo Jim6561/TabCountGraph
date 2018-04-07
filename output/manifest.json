@@ -1,7 +1,7 @@
 {
    "manifest_version": 2,
-   "version": "0.1",
-   "name": "Jim's Tab Counter",
+   "version": "1.0",
+   "name": "Tab Graph",
    "description": "Statistics on history of open tabs.",
    
    "background": {
