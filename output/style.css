@@ -1,15 +1,25 @@
 body {
-    background-color: lavender;
+    background-color: #F8F8FB;
 }
 
 .mainTable {
 	font-family: system-ui, sans-serif;
     font-size: 100%;
-    width: 720px;
+    width: 700px;
 }
 
-.graphHolder {
-	background-color: pink;
+.summaryBox {
+	text-align: center;
+	width: 180px;
+	padding: 5px;
+}
+.summaryBoxLabel {
+	font-size: 1.17em;
+	font-weight: bold;
+	margin-bottom: 0.5em;
+}
+.summaryBoxValue {
+
 }
 
 .datePartHeader {
@@ -24,12 +34,12 @@ body {
 }
 
 .datePartThingy {
-	background-color: plum;
+	background-color: #F0C8F0;
 	border: thin solid black;
 	padding: 5px;
 	margin: 2px;
 }
 
 .datePartThingy-selected {
-	background-color: orchid;
+	background-color: #EA80E6;
 }

@@ -1,7 +1,7 @@
 {
    "manifest_version": 2,
-   "version": "0.1",
-   "name": "Jim's Tab Counter",
+   "version": "1.0",
+   "name": "Tab Graph",
    "description": "Statistics on history of open tabs.",
    
    "background": {
@@ -9,9 +9,17 @@
    },
    
    "browser_action": {
-      "default_icon": "triangle.png",
-      "default_title": "Hello everybody!",
+		"default_icon": {
+			"19": "images/triangle_19.png",
+			"38": "images/triangle_38.png"
+      },
+      "default_title": "Tab Graph",
       "default_popup": "main.html"
+   },
+   "icons": {
+		"128": "images/triangle_128.png",
+		"48": "images/triangle_48.png",
+		"16": "images/triangle_16.png"
    },
    "permissions": [ "storage" ]
 }

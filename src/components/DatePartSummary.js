@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
  
 /**
  * A counter button: tap the button to increase the count.
@@ -38,11 +39,12 @@ class DatePartSummary extends React.Component {
 }
 
 DatePartSummary.propTypes = {
-  //label: PropTypes.string.isRequired,
-  //opened: PropTypes.object,
-  //closed: PropTypes.object,
-  //max: PropTypes.object,
-  //isSelected: PropTypes.bool.isRequired
+  label: PropTypes.string.isRequired,
+  dateType: PropTypes.string.isRequired,
+  opened: PropTypes.object,
+  closed: PropTypes.object,
+  max: PropTypes.object,
+  isSelected: PropTypes.bool.isRequired
 }
 
 export default DatePartSummary;
