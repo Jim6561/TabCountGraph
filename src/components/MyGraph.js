@@ -36,6 +36,14 @@ class MyGraph extends React.Component {
             .domain(extent(timestamps))
             .range([0, this.props.size[0] - (axisBorder + padding)]);
 
+
+        //Let's work out the widths of the bars here...
+        const widths = [];
+        for (var i = 0; i<this.props.data.length-2; i++) {
+            widths.push(1 + xScale(this.props.data[i+1][0]) - xScale(this.props.data[i][0]));
+        }
+        widths.push[1]; // special case on the Right hand end
+
         const yScale = scaleLinear()
             .domain([0, dataMax])
             .range([graphHeight, 0]);
@@ -68,7 +76,7 @@ class MyGraph extends React.Component {
             .attr('x', d => axisBorder + xScale(d[0]) )
             .attr('y', d => yScale(d[1]) + padding)
             .attr('height', d => graphHeight - yScale(d[1]) )
-            .attr('width', 1);
+            .attr('width', (d, i) => widths[i]);
 
         select(node)
             .selectAll('.xAxis, .yAxis')
