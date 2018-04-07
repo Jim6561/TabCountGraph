@@ -39,10 +39,10 @@ class MyGraph extends React.Component {
 
         //Let's work out the widths of the bars here...
         const widths = [];
-        for (var i = 0; i<this.props.data.length-2; i++) {
+        for (var i = 0; i<this.props.data.length-1; i++) {
             widths.push(1 + xScale(this.props.data[i+1][0]) - xScale(this.props.data[i][0]));
         }
-        widths.push[1]; // special case on the Right hand end
+        widths.push(1); // special case on the Right hand end
 
         const yScale = scaleLinear()
             .domain([0, dataMax])
