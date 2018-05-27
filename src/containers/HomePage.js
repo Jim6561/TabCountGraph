@@ -157,7 +157,18 @@ class Homepage extends React.Component {
 			return '';
 		}
 
-		return this.state.currentState.numTabs + ' = ' + windows.join(' + ');
+		var nonEmptyWindows = [];
+		windows.forEach((value) => {
+			if (value > 0) {
+				nonEmptyWindows.push(value);
+			}
+		});
+
+		if (nonEmptyWindows.length <= 1) {
+			return this.state.currentState.numTabs;
+		} else {
+			return this.state.currentState.numTabs + ' = ' + nonEmptyWindows.join(' + ');
+		}
 	}
 
 	render() {
