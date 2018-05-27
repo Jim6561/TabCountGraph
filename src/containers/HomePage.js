@@ -131,15 +131,55 @@ class Homepage extends React.Component {
 		return d;
 	}
 
+	getWindowsOpen() {
+		var windows = this.state.currentState.windows;
+		return windows ? windows.length : 0;
+	}
+
+	getBusiestWindowCount() {
+		var windows = this.state.currentState.windows;
+		if (!windows) {
+			return 0;
+		}
+
+		var max = 0;
+		windows.forEach((element) => {
+			if (element > max) {
+				max = element;
+			}
+		});
+		return max;
+	}
+
+	getTabsOpenDescription() {
+		var windows = this.state.currentState.windows;
+		if (!windows) {
+			return '';
+		}
+
+		var nonEmptyWindows = [];
+		windows.forEach((value) => {
+			if (value > 0) {
+				nonEmptyWindows.push(value);
+			}
+		});
+
+		if (nonEmptyWindows.length <= 1) {
+			return this.state.currentState.numTabs;
+		} else {
+			return this.state.currentState.numTabs + ' = ' + nonEmptyWindows.join(' + ');
+		}
+	}
+
 	render() {
 		return (
 			<div>
 				<table class='mainTable'>
 					<tbody>
 						<tr>
-							<td><CurrentBox label='Tabs open' value={this.state.currentState.numTabs} /></td>
-							<td><CurrentBox label='Windows open' value={this.state.currentState.numWindows} /></td>
-							<td><CurrentBox label='Tabs in busiest window' value={this.state.currentState.busiestWindow} /></td>
+							<td><CurrentBox label='Tabs open' value={this.getTabsOpenDescription()} /></td>
+							<td><CurrentBox label='Windows open' value={this.getWindowsOpen()} /></td>
+							<td><CurrentBox label='Tabs in busiest window' value={this.getBusiestWindowCount()} /></td>
 						</tr>
 						<tr>
 							<td colspan='3' rowspan='5'>

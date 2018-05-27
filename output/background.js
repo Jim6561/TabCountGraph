@@ -10,19 +10,13 @@ onTabsChange = function(input) {
 	console.log('current time: ' + (new Date()));
 	chrome.windows.getAll({populate: true}, function(windows) {
 		var currentState = {
-			numTabs: 0,
-			numWindows: 0,
-			busiestWindow: 0
+			windows: [],
+			numTabs: 0
 		};
-		
 		for (var i = 0; i<windows.length; i++) {
-			currentState.numWindows++;	
 			var thisTabs = windows[i].tabs.length;
-
 			currentState.numTabs += thisTabs;
-			if (thisTabs > currentState.busiestWindow) {
-				currentState.busiestWindow = thisTabs;
-			}
+			currentState.windows.push(thisTabs);
 		}
 
 		chrome.storage.local.get('totals', function(data) {
