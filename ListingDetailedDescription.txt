@@ -1,0 +1,7 @@
+Do you have loads of tabs open all the time? Do you ever wonder just how many tabs you open, and how busy Chrome gets? Tab Graph has these answers, AND it shows you a graph of your activity.
+
+- It tells you how many tabs you have opened today.
+- It tells you the maximum number of tabs you got up to today.
+- Get a summary of the data for this week, this month, this year. As well as all time.
+
+The badge shows you at a glance how many tabs are currently open across all windows. As your work day gets more and more hectic, and you open more and more tabs, then the badge color changes to match your mood!
