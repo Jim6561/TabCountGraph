@@ -31,6 +31,7 @@ body {
 .datePartHeader:hover {
 	font-weight: bolder;
 	text-decoration: underline;
+	cursor: pointer;
 }
 
 .datePartThingy {
